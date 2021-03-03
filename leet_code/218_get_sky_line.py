@@ -1,5 +1,5 @@
 # -----------------------------------------
-# Original
+# My Solution
 # -----------------------------------------
 # def getSkyline(buildings):
 #     # buildings = sorted(buildings, key=lambda building: (building[0], building[1], building[2]))

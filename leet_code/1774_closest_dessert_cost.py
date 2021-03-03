@@ -1,5 +1,5 @@
 # -----------------------------------------
-# Original
+# My Solution
 # -----------------------------------------
 # def get_possible_combinations(min, max, size):
 #     combinations = []

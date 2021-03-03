@@ -1,5 +1,5 @@
 # -----------------------------------------
-# Original
+# My Solution
 # -----------------------------------------
 # def squared_array(nums):
 #     return list(map(lambda num: num * num, nums))

@@ -1,5 +1,5 @@
 # -----------------------------------------
-# Original
+# My Solution
 # -----------------------------------------
 # def generateParenthesis(n):
 #     combinations = []

@@ -1,5 +1,5 @@
 # -----------------------------------------
-# Original
+# My Solution
 # -----------------------------------------
 #
 # 1. get all matchable s indexes combination for each pattern
