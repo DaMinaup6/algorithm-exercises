@@ -22,15 +22,52 @@
 # -----------------------------------------
 # O(n^2): Dynamic Programming
 # -----------------------------------------
-class Solution:
-    def lengthOfLIS(self, nums):
-        dp = [1 for _ in range(len(nums))]
-        for idx_1 in range(1, len(nums)):
-            for idx_2 in range(idx_1):
-                if nums[idx_2] < nums[idx_1] and dp[idx_1] <= dp[idx_2]:
-                    dp[idx_1] = dp[idx_2] + 1
+# class Solution:
+#     def lengthOfLIS(self, nums):
+#         dp = [1 for _ in range(len(nums))]
+#         for idx_1 in range(1, len(nums)):
+#             for idx_2 in range(idx_1):
+#                 if nums[idx_2] < nums[idx_1] and dp[idx_1] <= dp[idx_2]:
+#                     dp[idx_1] = dp[idx_2] + 1
+#
+#         return max(dp)
 
-        return max(dp)
+# -----------------------------------------
+# O(nlog(n)): Patience Sorting
+# -----------------------------------------
+class Solution:
+    def bisect_left(self, dp, num):
+        target_index = len(dp)
+
+        left_index  = 0
+        right_index = len(dp) - 1
+        while left_index <= right_index:
+            middle_index = (left_index + right_index) // 2
+            if dp[middle_index] < num:
+                target_index = middle_index + 1
+                left_index   = middle_index + 1
+            else:
+                target_index = middle_index
+                right_index  = middle_index
+                if left_index == right_index:
+                    break
+
+        return target_index
+
+    def lengthOfLIS(self, nums):
+        # dp[i] := smallest ending number
+        # For each move, we either do
+        #   1. Extend dp
+        #   2. Replace a number to generate a better subsequence
+        dp = []
+        for num in nums:
+            index = self.bisect_left(dp, num)
+            if index == len(dp):
+                dp.append(num)
+            else:
+                dp[index] = num
+
+        return len(dp)
 
 processor = Solution()
 print('======= Correctness Testing... =======')
