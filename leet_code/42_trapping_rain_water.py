@@ -46,22 +46,48 @@
 # -----------------------------------------
 # O(n): Dynamic Programming
 # -----------------------------------------
+# class Solution:
+#     def trap(self, height):
+#         if len(height) <= 2:
+#             return 0
+#
+#         # pre-compute max height of h[0:i] and h[i:(n - 1)], where n == len(height)
+#         left_max  = [0] * len(height)
+#         right_max = [0] * len(height)
+#         for h_idx in range(len(height)):
+#             left_max[h_idx] = height[h_idx] if h_idx == 0 else max(left_max[h_idx - 1], height[h_idx])
+#         for h_idx in range(len(height) - 1, -1, -1):
+#             right_max[h_idx] = height[h_idx] if h_idx == len(height) - 1 else max(right_max[h_idx + 1], height[h_idx])
+#
+#         volume = 0
+#         for h_idx in range(len(height)):
+#             volume += (min(left_max[h_idx], right_max[h_idx]) - height[h_idx]) * 1
+#         return volume
+
+# -----------------------------------------
+# O(n): Two Pointers
+# -----------------------------------------
 class Solution:
     def trap(self, height):
         if len(height) <= 2:
             return 0
 
-        # pre-compute max height of h[0:i] and h[i:(n - 1)], where n == len(height)
-        left_max  = [0] * len(height)
-        right_max = [0] * len(height)
-        for h_idx in range(len(height)):
-            left_max[h_idx] = height[h_idx] if h_idx == 0 else max(left_max[h_idx - 1], height[h_idx])
-        for h_idx in range(len(height) - 1, -1, -1):
-            right_max[h_idx] = height[h_idx] if h_idx == len(height) - 1 else max(right_max[h_idx + 1], height[h_idx])
-
+        left_cursor  = 0
+        right_cursor = len(height) - 1
+        left_max  = height[0]
+        right_max = height[len(height) - 1]
+        
         volume = 0
-        for h_idx in range(len(height)):
-            volume += (min(left_max[h_idx], right_max[h_idx]) - height[h_idx]) * 1
+        while left_cursor < right_cursor:
+            if left_max < right_max:
+                volume += left_max - height[left_cursor]
+                left_cursor += 1
+                left_max = max(left_max, height[left_cursor])
+            else:
+                volume += right_max - height[right_cursor]
+                right_cursor -= 1
+                right_max = max(right_max, height[right_cursor])
+
         return volume
 
 processor = Solution()
