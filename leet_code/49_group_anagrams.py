@@ -1,21 +1,39 @@
 # -----------------------------------------
-# My Solution
+# O(N * Klog(K)): My Solution
 # -----------------------------------------
+# K := len(max(string for string in strs))
 class Solution:
     def groupAnagrams(self, strs):
-        sorted_str_dict = {}
-        for str_index, string in enumerate(strs):
-            sorted_str = str(sorted(string))
-            if sorted_str_dict.get(sorted_str) is None:
-                sorted_str_dict[sorted_str] = []
+        anagrams = {}
+        for string in strs:
+            anagram = str(sorted(string))
+            if anagrams.get(anagram) is None:
+                anagrams[anagram] = []
 
-            sorted_str_dict[sorted_str].append(str_index)
+            anagrams[anagram].append(string)
 
-        anagrams = []
-        for str_indexes in sorted_str_dict.values():
-            anagram = []
-            for str_index in str_indexes:
-                anagram.append(strs[str_index])
-            anagrams.append(anagram)
+        return anagrams.values()
 
-        return anagrams
+# -----------------------------------------
+# O(N * K): Categorize by Count
+# -----------------------------------------
+# K := len(max(string for string in strs))
+class Solution:
+    def str_alphabet_counts(self, string):
+        alphabet_counts = [0 for _ in range(26)]
+        for char in string:
+            alphabet_counts[ord(char) - 97] += 1
+
+        return alphabet_counts
+
+    def groupAnagrams(self, strs):
+        # this only applied to string with only alphabet letters
+        anagrams = {}
+        for string in strs:
+            anagram = str(self.str_alphabet_counts(string))
+            if anagrams.get(anagram) is None:
+                anagrams[anagram] = []
+
+            anagrams[anagram].append(string)
+
+        return anagrams.values()
