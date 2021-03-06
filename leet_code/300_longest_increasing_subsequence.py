@@ -24,10 +24,12 @@
 # -----------------------------------------
 # class Solution:
 #     def lengthOfLIS(self, nums):
+#         # dp[i] := length of longest increasing subsequence ends at nums[i]
 #         dp = [1 for _ in range(len(nums))]
+#
 #         for idx_1 in range(1, len(nums)):
 #             for idx_2 in range(idx_1):
-#                 if nums[idx_2] < nums[idx_1] and dp[idx_1] <= dp[idx_2]:
+#                 if nums[idx_2] < nums[idx_1] and dp[idx_2] >= dp[idx_1]:
 #                     dp[idx_1] = dp[idx_2] + 1
 #
 #         return max(dp)
