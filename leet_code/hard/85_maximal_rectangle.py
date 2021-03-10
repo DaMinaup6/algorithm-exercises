@@ -53,3 +53,55 @@ class Solution:
                 max_area = max(max_area, max_rectangle_area_from(i, j))
 
         return max_area
+
+# -----------------------------------------
+# Calculate largest rectangle in histogram
+#
+# Time  Complexity: O(mn)
+# Space Complexity: O(n)
+# -----------------------------------------
+# m := len(matrix), n := len(matrix[0])
+class Solution:
+    def largest_rectangle_area(self, heights): # from problem 84
+        h_stack = [] # stack of heights
+        p_stack = [] # stack of positions
+        heights.append(0) # force to empty stack before while loop ends
+
+        max_area = 0
+        for index in range(len(heights)):
+            last_position = len(heights) + 1
+
+            while len(h_stack) > 0 and h_stack[-1] > heights[index]:
+                last_position = p_stack[-1]
+                current_area  = (index - p_stack.pop()) * h_stack.pop()
+                max_area = max(max_area, current_area)
+
+            if len(h_stack) == 0 or h_stack[-1] < heights[index]:
+                h_stack.append(heights[index])
+                p_stack.append(min(last_position, index))
+
+        return max_area
+
+    def maximalRectangle(self, matrix):
+        if matrix is None or len(matrix) == 0:
+            return 0
+
+        # e.g.
+        # [
+        #   [1, 0, 0, 1, 1, 1],
+        #   [1, 0, 1, 1, 0, 1],
+        # ]
+        # this equals to find largest rectangle in two histograms
+        # histogram 1: [1, 0, 0, 1, 1, 1]
+        # histogram 2: [2, 0, 1, 2, 0, 1]
+        max_area = 0
+        heights  = [0 for _ in range(len(matrix[0]))]
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == '1':
+                    heights[j] += 1
+                else:
+                    heights[j] = 0
+            max_area = max(max_area, self.largest_rectangle_area(heights))
+
+        return max_area
