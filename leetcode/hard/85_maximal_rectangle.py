@@ -93,7 +93,7 @@ class Solution:
         # ]
         # this equals to find largest rectangle in two histograms
         # histogram 1: [1, 0, 0, 1, 1, 1]
-        # histogram 2: [2, 0, 1, 2, 0, 1]
+        # histogram 2: [2, 0, 1, 2, 0, 2]
         max_area = 0
         heights  = [0 for _ in range(len(matrix[0]))]
         for i in range(len(matrix)):
