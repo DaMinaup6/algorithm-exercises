@@ -1,42 +1,42 @@
 # -----------------------------------------
 # My Solution
 # -----------------------------------------
-# class Solution:
-#     def lengthOfLIS(self, nums):
-#         subsequences = []
-#
-#         for num_idx, num in enumerate(nums):
-#             subsequence = [num]
-#
-#             subsequence_idx = num_idx - 1
-#             while subsequence_idx >= 0:
-#                 prev_subsequence = subsequences[subsequence_idx]
-#                 if num > prev_subsequence[-1] and len(prev_subsequence) + 1 > len(subsequence):
-#                     subsequence = prev_subsequence + [num]
-#                 subsequence_idx -= 1
-#
-#             subsequences.append(subsequence)
-#
-#         return max(len(subsequence) for subsequence in subsequences)
+class Solution:
+    def lengthOfLIS(self, nums):
+        subsequences = []
+
+        for num_idx, num in enumerate(nums):
+            subsequence = [num]
+
+            subsequence_idx = num_idx - 1
+            while subsequence_idx >= 0:
+                prev_subsequence = subsequences[subsequence_idx]
+                if num > prev_subsequence[-1] and len(prev_subsequence) + 1 > len(subsequence):
+                    subsequence = prev_subsequence + [num]
+                subsequence_idx -= 1
+
+            subsequences.append(subsequence)
+
+        return max(len(subsequence) for subsequence in subsequences)
 
 # -----------------------------------------
 # O(n^2): Dynamic Programming
 # -----------------------------------------
-# class Solution:
-#     def lengthOfLIS(self, nums):
-#         # dp[i] := length of longest increasing subsequence ends at nums[i]
-#         dp = [1 for _ in range(len(nums))]
-#
-#         for idx_1 in range(1, len(nums)):
-#             for idx_2 in range(idx_1):
-#                 if nums[idx_2] < nums[idx_1] and dp[idx_2] >= dp[idx_1]:
-#                     dp[idx_1] = dp[idx_2] + 1
-#
-#         return max(dp)
+class Solution:
+    def lengthOfLIS(self, nums):
+        # dp[i] := length of longest increasing subsequence ends at nums[i]
+        dp = [1 for _ in range(len(nums))]
+        for idx_1 in range(1, len(nums)):
+            for idx_2 in range(idx_1):
+                if nums[idx_2] < nums[idx_1] and dp[idx_2] >= dp[idx_1]:
+                    dp[idx_1] = dp[idx_2] + 1
+
+        return max(dp)
 
 # -----------------------------------------
 # O(nlog(n)): Patience Sorting
 # -----------------------------------------
+# Ref: https://youtu.be/l2rCz7skAlk?t=369
 class Solution:
     def bisect_left(self, dp, num):
         target_index = len(dp)
