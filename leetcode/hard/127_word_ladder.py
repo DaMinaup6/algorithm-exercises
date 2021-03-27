@@ -23,7 +23,7 @@ class Solution:
             for _ in range(queue_size):
                 word = queue.popleft()
                 if word == endWord:
-                    return level + 1    
+                    return level + 1
 
                 word_array = list(word)
                 for index in range(len(word_array)):
