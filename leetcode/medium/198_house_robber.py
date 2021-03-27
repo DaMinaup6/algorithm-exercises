@@ -21,3 +21,22 @@ class Solution:
             max_rob = max(max_rob, dp[index])
 
         return max_rob
+
+# -----------------------------------------
+# Model Solution
+#
+# Time  Complexity: O(n)
+# Space Complexity: O(1)
+# -----------------------------------------
+# Ref:https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20LeetCode%20Grinding%20Guide%20(C%2B%2B%20Version).pdf
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
+
+        pre_val_1, pre_val_2, max_val = 0, 0, 0
+        for index in range(len(nums)):
+            max_val = max(pre_val_1, nums[index] + pre_val_2)
+            pre_val_2 = pre_val_1
+            pre_val_1 = max_val
+        return max_val
