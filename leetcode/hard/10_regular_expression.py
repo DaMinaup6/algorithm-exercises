@@ -232,46 +232,43 @@
 # Dynamic Programming
 # -----------------------------------------
 #
-# 1. Initialize a result_matrix for sub_s_len == 0 or sub_p_len == 0. Then expand sub_s and sub_p to record the matched result
+# 1. Initialize a dp for sub_s_len == 0 or sub_p_len == 0. Then expand sub_s and sub_p to record the matched result
 # 2. If current s char == current p char or current p char == '.'
-#    a. result_matrix[sub_s_len][sub_p_len] = result_matrix[sub_s_len - 1][sub_p_len - 1]
+#    a. dp[sub_s_len][sub_p_len] = dp[sub_s_len - 1][sub_p_len - 1]
 #       e.g. s == xxxx...(prev_s_char)(current_s_char), p == yyyy...(prev_p_char)(current_p_char)
 #            since now current_s_char == current_p_char, if p matches s then yyyy...(prev_p_char) must matches xxxx...(prev_s_char)
 # 3. If current p char == '*', there are two possible results
 #    a. pattern f"{prev_p_char}*" matches zero times
-#       In this case, check result_matrix[sub_s_len][sub_p_len - 2] since matches zero times means we ignore this pattern
+#       In this case, check dp[sub_s_len][sub_p_len - 2] since matches zero times means we ignore this pattern
 #    b. pattern f"{prev_p_char}*" matches multiple times
 #       In this case, check if curr_s_char == prev_p_char or prev_p_char == '.' first, otherwise it's impossible to match the pattern.
-#       If curr_s_char == prev_p_char or prev_p_char == '.' then check result_matrix[sub_s_len - 1][sub_p_len], which means current_s_char contained in pattern
-# 4. Not all cases above, there is no chance to match the pattern, just set False to result_matrix[sub_s_len][sub_p_len]
+#       If curr_s_char == prev_p_char or prev_p_char == '.' then check dp[sub_s_len - 1][sub_p_len], which means current_s_char contained in pattern
+# 4. Not all cases above, there is no chance to match the pattern, just set False to dp[sub_s_len][sub_p_len]
 #
 def isMatch(s, p):
-    result_matrix = {}
+    dp = [[False] * (len(p) + 1) for _ in range(len(s) + 1)]
+    dp[0][0] = True
+    for sub_s_len in range(len(s) + 1):
+        for sub_p_len in range(len(p) + 1):
+            if sub_s_len == 0:
+                if sub_p_len >= 2:
+                    dp[0][sub_p_len] = dp[0][sub_p_len - 2] if p[sub_p_len - 1] == '*' else False
+                continue
 
-    for sub_s_len in range(0, len(s) + 1):
-        result_matrix[sub_s_len] = {}
-
-        for sub_p_len in range(0, len(p) + 1):
-            if sub_p_len == 0:
-                result_matrix[sub_s_len][sub_p_len] = (sub_s_len == 0)
-            elif sub_s_len == 0:
-                result_matrix[sub_s_len][sub_p_len] = result_matrix[sub_s_len][sub_p_len - 2] if p[sub_p_len - 1] == '*' else False
-            else:
+            if sub_s_len >= 1 and sub_p_len >= 1:
                 curr_s_char = s[sub_s_len - 1]
                 curr_p_char = p[sub_p_len - 1]
-                prev_p_char = p[sub_p_len - 2]
-
+                prev_p_char = p[sub_p_len - 2] if sub_p_len >= 2 else ''
                 if curr_s_char == curr_p_char or curr_p_char == '.':
-                    result_matrix[sub_s_len][sub_p_len] = result_matrix[sub_s_len - 1][sub_p_len - 1]
+                    dp[sub_s_len][sub_p_len] = dp[sub_s_len - 1][sub_p_len - 1]
                 elif curr_p_char == '*':
-                    zero_matched = result_matrix[sub_s_len][sub_p_len - 2]
-                    more_matched = result_matrix[sub_s_len - 1][sub_p_len] if curr_s_char == prev_p_char or prev_p_char == '.' else False
-
-                    result_matrix[sub_s_len][sub_p_len] = zero_matched or more_matched
+                    zero_matched = dp[sub_s_len][sub_p_len - 2]
+                    more_matched = dp[sub_s_len - 1][sub_p_len] if curr_s_char == prev_p_char or prev_p_char == '.' else False
+                    dp[sub_s_len][sub_p_len] = zero_matched or more_matched
                 else:
-                    result_matrix[sub_s_len][sub_p_len] = False
+                    dp[sub_s_len][sub_p_len] = False
 
-    return result_matrix[len(s)][len(p)]
+    return dp[len(s)][len(p)]
 
 print(f"isMatch('', '.*.*'):                                          correct: {isMatch('', '.*.*') == True}")
 print(f"isMatch('', '.*.'):                                           correct: {isMatch('', '.*.') == False}")
