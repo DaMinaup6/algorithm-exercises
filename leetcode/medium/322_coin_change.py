@@ -28,6 +28,24 @@ class Solution:
         return dp[amount]
 
 # -----------------------------------------
+# Dynamic Programming (Knapsack Problem)
+#
+# Time  Complexity: O(mn)
+# Space Complexity: O(n)
+# -----------------------------------------
+# m := len(coins), n := amount
+# Ref: https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20LeetCode%20Grinding%20Guide%20(C%2B%2B%20Version).pdf
+class Solution:
+    def coinChange(self, coins, amount):
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        for coin in coins:
+            for sub_amount in range(coin, amount + 1):
+                dp[sub_amount] = min(dp[sub_amount], dp[sub_amount - coin] + 1)
+
+        return dp[amount] if dp[amount] != float('inf') else -1
+
+# -----------------------------------------
 # DFS + Greedy + Pruning
 #
 # Time  Complexity: O((n / coin_0) * (n / coin_1) * ... * (n / coin_(m - 1)))
