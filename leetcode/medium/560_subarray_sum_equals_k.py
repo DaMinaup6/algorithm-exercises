@@ -43,6 +43,28 @@ class Solution:
         return result
 
 # -----------------------------------------
+# Cumulative Sum
+#
+# Time  Complexity: O(n^2)
+# Space Complexity: O(1)
+# -----------------------------------------
+# Ref: https://leetcode.com/problems/subarray-sum-equals-k/solution/
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        result = 0
+        for start_index in range(len(nums)):
+            if nums[start_index] == k:
+                result += 1
+        for start_index in range(len(nums) - 1):
+            current_sum = nums[start_index]
+            for end_index in range(start_index + 1, len(nums)):
+                current_sum += nums[end_index]
+                if current_sum == k:
+                    result += 1
+
+        return result
+
+# -----------------------------------------
 # Hashmap
 #
 # Time  Complexity: O(n)
