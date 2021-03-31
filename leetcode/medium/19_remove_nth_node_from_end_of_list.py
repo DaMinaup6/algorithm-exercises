@@ -3,6 +3,12 @@ class ListNode:
         self.val = val
         self.next = next
 
+# -----------------------------------------
+# My Solution
+#
+# Time  Complexity: O(n)
+# Space Complexity: O(n)
+# -----------------------------------------
 class Solution:
     def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
         nodes = [head]
@@ -20,3 +26,28 @@ class Solution:
         else:
             nodes[target_index - 1].next = None if n == 1 else nodes[target_index + 1]
             return head
+
+# -----------------------------------------
+# Model Solution
+#
+# Time  Complexity: O(n)
+# Space Complexity: O(1)
+# -----------------------------------------
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        slow = fast = head
+        for _ in range(n):
+            fast = fast.next
+        # condition n <= list_size specified in the description, so if fast is None then the only possible case is n == list_size
+        if fast is None:
+            return head.next
+
+        prev = None
+        while fast is not None:
+            fast = fast.next
+            if fast is None:
+                prev = slow
+            slow = slow.next
+        prev.next = slow.next
+
+        return head
