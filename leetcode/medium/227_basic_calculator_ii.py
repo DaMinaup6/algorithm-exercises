@@ -91,24 +91,24 @@ class Solution:
 # Ref: https://leetcode.com/problems/basic-calculator-ii/solution/771753
 class Solution:
     def calculate(self, s: str) -> int:
-        inner, outer, result, operator = 0, 0, 0, '+'
+        inner, outer, result, prev_operator = 0, 0, 0, '+'
         for char in s + '+':
             if char == ' ':
                 continue
-
             if char.isdigit():
                 inner = 10 * inner + int(char)
                 continue
-            if operator == '+':
+
+            if prev_operator == '+':
                 result += outer
                 outer = inner
-            elif operator == '-':
+            elif prev_operator == '-':
                 result += outer
                 outer = -inner
-            elif operator == '*':
+            elif prev_operator == '*':
                 outer *= inner
-            elif operator == '/':
+            elif prev_operator == '/':
                 outer = int(outer / inner)
-            inner, operator = 0, char
+            inner, prev_operator = 0, char
 
         return result + outer
