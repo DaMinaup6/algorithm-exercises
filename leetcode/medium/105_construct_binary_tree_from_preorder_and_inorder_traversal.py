@@ -79,8 +79,8 @@ class Solution:
             root = TreeNode(preorder[preorder_currsor])
             preorder_currsor += 1
 
-            root.left  = array_to_tree(left, inorder_index_map[root.value] - 1)
-            root.right = array_to_tree(inorder_index_map[root.value] + 1, right)
+            root.left  = array_to_tree(left, inorder_index_map[root.val] - 1)
+            root.right = array_to_tree(inorder_index_map[root.val] + 1, right)
 
             return root
 
