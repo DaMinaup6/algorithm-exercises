@@ -17,14 +17,14 @@ class Solution:
         distance_to_last_node = [float('inf') for _ in range(n + 1)]
         distance_to_last_node[n] = 0
 
-        visted_nodes = set()
+        visited_nodes = set()
         pq = [(0, n)]
         while pq:
             distance, node = heapq.heappop(pq)
-            visted_nodes.add(node)
+            visited_nodes.add(node)
 
             for (neighbor, weight) in graph[node]:
-                if neighbor not in visted_nodes:
+                if neighbor not in visited_nodes:
                     new_distance = distance + weight
                     if new_distance < distance_to_last_node[neighbor]:
                         heapq.heappush(pq, (new_distance, neighbor))
