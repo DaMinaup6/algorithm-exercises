@@ -13,16 +13,12 @@ Return the minimum cost so that for every pair of cities, there exists a path of
 # Space Complexity: O(E)
 # -----------------------------------------
 # Ref: https://www.youtube.com/watch?v=wmW8G8SrXDs
-
-import collections
-import heapq
-
 class Solution:
     def minimumCost(self, N, connections):
         union_head = list(range(N))
-        def union_head_find(node):
+        def find_union_head(node):
             if node != union_head[node]:
-                union_head[node] = union_head_find(union_head[union_head[node]])
+                union_head[node] = find_union_head(union_head[union_head[node]])
             return union_head[node]
 
         total_cost = 0
@@ -31,7 +27,7 @@ class Solution:
             city_1 -= 1
             city_2 -= 1
 
-            city_1_union_head, city_2_union_head = union_head_find(city_1), union_head_find(city_2)
+            city_1_union_head, city_2_union_head = find_union_head(city_1), find_union_head(city_2)
             if city_1_union_head == city_2_union_head:
                 continue
             union_head[city_1_union_head] = city_2_union_head
