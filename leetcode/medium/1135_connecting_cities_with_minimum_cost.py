@@ -15,11 +15,11 @@ Return the minimum cost so that for every pair of cities, there exists a path of
 # Ref: https://www.youtube.com/watch?v=wmW8G8SrXDs
 class Solution:
     def minimumCost(self, N, connections):
-        union_head = list(range(N))
-        def find_union_head(node):
-            if node != union_head[node]:
-                union_head[node] = find_union_head(union_head[union_head[node]])
-            return union_head[node]
+        union_root = list(range(N))
+        def find_union_root(node):
+            if node != union_root[node]:
+                union_root[node] = find_union_root(union_root[union_root[node]])
+            return union_root[node]
 
         total_cost = 0
         for city_1, city_2, cost in sorted(connections, key=lambda connection: connection[2]):
@@ -27,13 +27,13 @@ class Solution:
             city_1 -= 1
             city_2 -= 1
 
-            city_1_union_head, city_2_union_head = find_union_head(city_1), find_union_head(city_2)
-            if city_1_union_head == city_2_union_head:
+            city_1_union_root, city_2_union_root = find_union_root(city_1), find_union_root(city_2)
+            if city_1_union_root == city_2_union_root:
                 continue
-            union_head[city_1_union_head] = city_2_union_head
+            union_root[city_1_union_root] = city_2_union_root
             total_cost += cost
 
-        return total_cost if len(set(union_head)) == 1 else -1
+        return total_cost if len(set(union_root)) == 1 else -1
 
 processor = Solution()
 print(processor.minimumCost(3, [[1, 2, 5], [1, 3, 6], [2, 3, 1]]) == 6)
