@@ -9,7 +9,7 @@ class TreeNode:
 # My Solution
 #
 # Time  Complexity: O(n^2)
-# Space Complexity: O(1)
+# Space Complexity: O(n)
 # -----------------------------------------
 class Solution:
     def pathSum(self, root: TreeNode, target: int) -> int:
@@ -48,7 +48,7 @@ class Solution:
 # Model Solution: DFS + DFS
 #
 # Time  Complexity: O(n^2)
-# Space Complexity: O(1)
+# Space Complexity: O(n)
 # -----------------------------------------
 # Ref: https://blog.csdn.net/fuxuemingzhu/article/details/71097135
 class Solution:
@@ -66,7 +66,7 @@ class Solution:
         target -= node.val
         if target == 0:
             paths_num += 1
-        
+
         paths_num += self.paths_num_from(node.left,  target)
         paths_num += self.paths_num_from(node.right, target)
         return paths_num
@@ -82,19 +82,19 @@ class Solution:
     def pathSum(self, root: TreeNode, target: int) -> int:
         paths_num = 0
         sum_dict  = {0: 1}
-        def dfs(node, target, current_sum):
+        def dfs(node, current_sum):
             nonlocal paths_num
 
             if not node:
                 return
 
             current_sum += node.val
-            paths_num   += sum_dict.get(current_sum - target, 0)
+            paths_num   += sum_dict.get(current_sum - target, 0) # if use defaultdict then we may increase sum_dict size with many redudant current_sum - target keys
 
-            sum_dict[current_sum] = sum_dict.get(current_sum, 0) + 1
-            dfs(node.left,  target, current_sum)
-            dfs(node.right, target, current_sum)
+            sum_dict[current_sum]  = sum_dict.get(current_sum, 0) + 1
+            dfs(node.left,  current_sum)
+            dfs(node.right, current_sum)
             sum_dict[current_sum] -= 1 # remove current_sum from sum_dict after dfs to avoid wrong calculation in other branches
 
-        dfs(root, target, 0)
+        dfs(root, 0)
         return paths_num
