@@ -7,18 +7,19 @@
 # Ref: https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20LeetCode%20Grinding%20Guide%20(C%2B%2B%20Version).pdf
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        if len(prices) < 2:
-            return 0
+        buy_profits  = [0] * len(prices)
+        hold_profits = [0] * len(prices)
+        sell_profits = [0] * len(prices)
+        cool_profits = [0] * len(prices)
+        hold_profits[0] = buy_profits[0] = -prices[0]
 
-        keep = [0] * len(prices)
-        sell = [0] * len(prices)
-        rest = [0] * len(prices)
-        keep[0] = -prices[0]
         for index in range(1, len(prices)):
-            keep[index] = max(rest[index - 1] - prices[index], keep[index - 1])
-            sell[index] = keep[index - 1] + prices[index]
-            rest[index] = max(rest[index - 1], sell[index - 1])
-        return max(sell[len(prices) - 1], rest[len(prices) - 1])
+            buy_profits[index]  = cool_profits[index - 1] - prices[index]
+            hold_profits[index] = max(hold_profits[index - 1], buy_profits[index - 1])
+            sell_profits[index] = max(hold_profits[index - 1], buy_profits[index - 1]) + prices[index]
+            cool_profits[index] = max(sell_profits[index - 1], cool_profits[index - 1])
+
+        return max(sell_profits[-1], cool_profits[-1])
 
 # -----------------------------------------
 # Model Solution
