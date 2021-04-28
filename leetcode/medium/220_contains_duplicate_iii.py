@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 class Solution:
     def containsNearbyAlmostDuplicate(self, nums, k, t):
-        if len(nums) <= 1:
+        if len(nums) <= 1 or k < 1 or t < 0:
             return False
 
         moving_window_set = OrderedDict()
