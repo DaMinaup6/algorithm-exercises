@@ -33,7 +33,7 @@ class Solution:
 # Model Solution
 #
 # Time  Complexity: O(n)
-# Space Complexity: O(1)
+# Space Complexity: O(n)
 # -----------------------------------------
 # Ref: https://blog.csdn.net/fuxuemingzhu/article/details/82982325
 class Solution:
