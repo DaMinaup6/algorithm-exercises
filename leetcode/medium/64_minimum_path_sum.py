@@ -1,11 +1,11 @@
 # -----------------------------------------
 # My Solution
 #
-# Time  Complexity: O(mn)
-# Space Complexity: O(mn)
+# Time Complexity: O(mn)
 # -----------------------------------------
-# m := number of rows
-# n := number of columns
+# m := number of rows, n := number of columns
+
+# -----> Version 1: Space Complexity: O(mn)
 class Solution:
     def minPathSum(self, grid):
         row_num = len(grid)
@@ -22,6 +22,25 @@ class Solution:
                     dp[i][j] = grid[i][j] + min(left_sum, up_sum)
 
         return dp[row_num - 1][col_num - 1]
+
+# -----> Version 2: Space Complexity: O(n)
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        row_num = len(grid)
+        col_num = len(grid[0])
+
+        curr_dp = grid[0][:]
+        for j in range(1, col_num):
+            curr_dp[j] += curr_dp[j - 1]
+
+        for i in range(1, row_num):
+            next_dp = [0] * col_num
+            for j in range(col_num):
+                prev_row_sum = curr_dp[j]
+                prev_col_sum = next_dp[j - 1] if j >= 1 else float('inf')
+                next_dp[j] = grid[i][j] + min(prev_row_sum, prev_col_sum)
+            curr_dp = next_dp
+        return curr_dp[-1]
 
 processor = Solution()
 print(f"processor.minPathSum([[1, 3, 1], [1, 5, 1], [4, 2, 1]])                                                                                                                                                      == 7:  {processor.minPathSum([[1, 3, 1], [1, 5, 1], [4, 2, 1]]) == 7}")
