@@ -15,6 +15,19 @@ class TreeNode:
 class Solution:
     def recoverTree(self, root: TreeNode) -> None:
         self.prev, self.node_1, self.node_2 = None, None, None
+        # For example 1:
+        #   1
+        #  /
+        # 3
+        #  \
+        #   2
+        # the inorder traversal would be [3, 2, 1]
+        # when we find first element greater than its next element, which is 3 in this case, we record 3 in sefl.node_1
+        # then we find last element smaller than its previous element, which is 1 in this case, record 1 in sefl.node_2
+        # swap sefl.node_1 and sefl.node_2 then we fix this tree
+        #
+        # One more example: [1, 5, 3, 4, 2]
+        # 5 is the first element greater than its next element and 2 is the last element smaller than its previous element
         self.in_order(root)
         self.node_1.val, self.node_2.val = self.node_2.val, self.node_1.val
 
