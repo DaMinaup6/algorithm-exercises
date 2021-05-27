@@ -39,13 +39,22 @@ class Solution:
         if obstacleGrid[0][0] == 1 or obstacleGrid[-1][-1] == 1:
             return 0
 
-        dp_curr = [0] * len(obstacleGrid[0])
-        dp_curr[0] = 1
+        # According to the solution, number of ways to reach some position (i, j), defined as dp[i][j],
+        # equals dp[i - 1][j] + dp[i][j - 1] (since we can either go right or down)
+        # but this can be simplified by using one-dimensional array
+        #
+        # e.g. obstacleGrid == [[0,0,1,0],[0,0,0,0],[1,1,1,0],[0,0,0,0]]
+        # after gone through first row, dp would be [1, 1, 0, 0]
+        # for position dp[1][1], it equals dp[0][1] + dp[1][0]
+        # but now we just use dp again in second row, so dp[0][1] already contained in dp[1], then we need to only
+        # add dp[0]
+        dp = [0] * len(obstacleGrid[0])
+        dp[0] = 1
         for i in range(len(obstacleGrid)):
             for j in range(len(obstacleGrid[0])):
                 if obstacleGrid[i][j] == 1:
-                    dp_curr[j] = 0
+                    dp[j] = 0
                 else:
-                    dp_curr[j] += dp_curr[j - 1] if j > 0 else 0
-
-        return dp_curr[-1]
+                    dp[j] += dp[j - 1] if j > 0 else 0
+            print('dp:', dp)
+        return dp[-1]
