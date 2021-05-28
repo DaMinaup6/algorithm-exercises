@@ -55,11 +55,10 @@ class Solution:
 # -----------------------------------------
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        positive = negative = max_val = nums[0]
+        curr_max_val = curr_min_val = max_val = nums[0]
         for index in range(1, len(nums)):
-            pre_positive, pre_negative = positive, negative
-            positive = max(pre_positive * nums[index], pre_negative * nums[index], nums[index])
-            negative = min(pre_positive * nums[index], pre_negative * nums[index], nums[index])
-            max_val  = max(max_val, positive)
-
+            prev_max_val, prev_min_val = curr_max_val, curr_min_val
+            curr_max_val = max(prev_max_val * nums[index], prev_min_val * nums[index], nums[index])
+            curr_min_val = min(prev_max_val * nums[index], prev_min_val * nums[index], nums[index])
+            max_val = max(max_val, curr_max_val)
         return max_val
