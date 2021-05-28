@@ -12,46 +12,25 @@ class ListNode:
 # -----------------------------------------
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
-        if head is None:
-            return None
+        return self.sort_list(head)
 
-        list_len = self.get_list_len(head)
-        return self.sort_list(head, list_len)
+    def get_divided_heads(self, head: ListNode) -> List[ListNode]:
+        prev = slow = fast = head
+        while fast is not None and fast.next is not None:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
 
-    def get_list_len(self, node: ListNode) -> ListNode:
-        list_len = 0
-        while node is not None:
-            list_len += 1
-            node = node.next
+        prev.next = None
+        return [head, slow]
 
-        return list_len
-
-    def get_divided_heads(self, head: ListNode, divided_len: int) -> List[ListNode]:
-        heads = [head]
-
-        node = head
-        node_index = 0
-        while node_index < divided_len:
-            if node_index == divided_len - 1:
-                tmp_node = node.next
-                node.next = None # need to remove connection between separated nodes
-                node = tmp_node
-                break
-            else:
-                node = node.next
-                node_index += 1
-
-        heads.append(node)
-        return heads
-
-    def sort_list(self, head: ListNode, list_len: int) -> ListNode:
-        if list_len == 1:
+    def sort_list(self, head: ListNode) -> ListNode:
+        if head is None or head.next is None:
             return head
 
-        left_head, right_head = self.get_divided_heads(head, list_len // 2)
-        left_head  = self.sort_list(left_head, list_len // 2)
-        right_head = self.sort_list(right_head, list_len - list_len // 2)
-
+        left_head, right_head = self.get_divided_heads(head)
+        left_head  = self.sort_list(left_head)
+        right_head = self.sort_list(right_head)
         return self.merge_two_sorted_lists(left_head, right_head)
 
     def merge_two_sorted_lists(self, head_1: ListNode, head_2: ListNode) -> ListNode:
