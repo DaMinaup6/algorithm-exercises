@@ -30,19 +30,13 @@ class Solution:
 # Ref: https://blog.csdn.net/zjuPeco/article/details/76468185
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        if len(prices) < 2:
-            return 0
-
         curr_keep = -prices[0]
         curr_sell = 0
         curr_rest = 0
         for index in range(1, len(prices)):
-            prev_keep = curr_keep
-            prev_sell = curr_sell
-            prev_rest = curr_rest
-
-            curr_keep = max(prev_rest - prices[index], prev_keep)
-            curr_sell = prev_keep + prices[index]
+            prev_keep, prev_sell, prev_rest = curr_keep, curr_sell, curr_rest
+            curr_keep = max(prev_keep, prev_rest - prices[index])
+            curr_sell = max(prev_sell, prev_keep + prices[index])
             curr_rest = max(prev_rest, prev_sell)
         return max(curr_sell, curr_rest)
 
