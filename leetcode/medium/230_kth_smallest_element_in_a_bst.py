@@ -32,6 +32,30 @@ class Solution:
         return num
 
 # -----------------------------------------
+# My Solution: Inorder Traversal
+#
+# Time  Complexity: O(n)
+# Space Complexity: O(1)
+# -----------------------------------------
+class Solution:
+    def kthSmallest(self, root: TreeNode, k: int) -> int:
+        nums_count = 0
+        target_num = 0
+        def find_target_num(node):
+            nonlocal nums_count, target_num
+
+            if node is None or nums_count == k:
+                return
+            find_target_num(node.left)
+            if nums_count < k:
+                target_num  = node.val
+                nums_count += 1
+            find_target_num(node.right)
+
+        find_target_num(root)
+        return target_num
+
+# -----------------------------------------
 # Follow up: add size to each node
 #
 # Time  Complexity: O(n)
