@@ -77,24 +77,30 @@ class Solution:
 # Time  Complexity: O(n)
 # Space Complexity: O(n)
 # -----------------------------------------
-# Ref: https://maxming0.github.io/2020/08/08/Path-Sum-III/
+# Ref:
+# a) https://maxming0.github.io/2020/08/08/Path-Sum-III/
+# b) https://youtu.be/ofMqFAFVcKY?t=214
+# c) https://www.youtube.com/watch?v=6jYxwdwjwKg
 class Solution:
     def pathSum(self, root: TreeNode, target: int) -> int:
-        paths_num = 0
-        sum_dict  = {0: 1}
+        paths_num  = 0
+        prefix_sum = {0: 1}
         def dfs(node, current_sum):
             nonlocal paths_num
 
             if not node:
                 return
 
+            # e.g. target == 8 and current_sum == 18
+            # if now we got 10 in sum_dict, which means there are paths with sum 10 previously
+            # so now we have paths with path sum 8
             current_sum += node.val
-            paths_num   += sum_dict.get(current_sum - target, 0) # if use defaultdict then we may increase sum_dict size with many redudant current_sum - target keys
+            paths_num   += prefix_sum.get(current_sum - target, 0) # if use defaultdict then we may increase prefix_sum size with many redudant current_sum - target keys
 
-            sum_dict[current_sum]  = sum_dict.get(current_sum, 0) + 1
+            prefix_sum[current_sum]  = prefix_sum.get(current_sum, 0) + 1
             dfs(node.left,  current_sum)
             dfs(node.right, current_sum)
-            sum_dict[current_sum] -= 1 # remove current_sum from sum_dict after dfs to avoid wrong calculation in other branches
+            prefix_sum[current_sum] -= 1 # remove current_sum from prefix_sum after dfs to avoid wrong calculation in other branches
 
         dfs(root, 0)
         return paths_num
