@@ -55,11 +55,16 @@ class Solution:
         profits = [0] * k
 
         for price in prices:
-            for index in range(k):
-                if index == 0:
-                    low_prices[0] = min(low_prices[0], price)
-                    profits[0] = max(profits[0], price - low_prices[0])
-                else:
-                    low_prices[index] = min(low_prices[index], price - profits[index - 1])
-                    profits[index] = max(profits[index], price - low_prices[index])
+            low_prices[0] = min(low_prices[0], price)
+            profits[0]    = max(profits[0],    price - low_prices[0])
+            # for second or further transaction, we can minus it by previous profit to give it a new buy price
+            # e.g. prices == [3, 5, 1, 4]
+            #      the max profit for making 2 transactions is 5, buy at first day, sell at second day and then buy at third day, then sell at fourth day
+            #      at third day, the original price is 1, but if we minus it by the profit comes from first transaction, then we get a new price "-1"
+            #      notice that after we sell at fourth day, we get profit 4 - (-1) == 5, which is exactly the answer
+            #      the idea behind the scenes is that we add the profits make by previous transaction into the buy price to help us calculate
+            #      so for second transaction, it looks like we still calculate by considering only one transaction but we hide the profit in the buy price
+            for index in range(1, k):
+                low_prices[index] = min(low_prices[index], price - profits[index - 1])
+                profits[index]    = max(profits[index],    price - low_prices[index])
         return profits[-1]
