@@ -50,12 +50,13 @@ class Solution:
             return False
 
         @lru_cache(None)
-        def dfs(curr_sum, used_nums):
-            for num_index in range(maxChoosableInteger):
-                if used_nums & (1 << num_index) == 0:
-                    # if current user acheives the desired number or next user have a chance to lose, current user will win
-                    if curr_sum + (num_index + 1) >= desiredTotal or not dfs(curr_sum + (num_index + 1), used_nums | (1 << num_index)):
+        def can_win(curr_sum, used_nums):
+            for num in range(1, maxChoosableInteger + 1):
+                bit_index = num - 1
+                if used_nums & (1 << bit_index) == 0:
+                    # if current user acheives the desired number or next user have a chance to lose, current user wins
+                    if curr_sum + num >= desiredTotal or not can_win(curr_sum + num, used_nums | (1 << bit_index)):
                         return True
             return False
 
-        return dfs(0, 0)
+        return can_win(0, 0)
