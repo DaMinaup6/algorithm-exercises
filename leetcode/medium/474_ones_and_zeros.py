@@ -9,14 +9,12 @@ from collections import Counter
 
 class Solution:
     def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
-        digit_count_map = {}
-        for index, binary_string in enumerate(strs):
-            digit_count_map[index] = Counter(binary_string)
-
+        # dp[k][i][j] := max subset we can have for strs[:k] with at most i zeros and j ones
         dp = [[[0] * (n + 1) for _ in range(m + 1)] for _ in range(len(strs) + 1)]
         for k in range(1, len(strs) + 1):
-            zero_count = digit_count_map[k - 1]['0']
-            one_count  = digit_count_map[k - 1]['1']
+            digit_counter = Counter(strs[k - 1])
+            zero_count = digit_counter['0']
+            one_count  = digit_counter['1']
             for i in range(m + 1):
                 for j in range(n + 1):
                     if i >= zero_count and j >= one_count:
@@ -37,13 +35,18 @@ from collections import Counter
 
 class Solution:
     def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
-        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        curr_dp = [[0] * (n + 1) for _ in range(m + 1)]
         for k in range(1, len(strs) + 1):
             digit_counter = Counter(strs[k - 1])
             zero_count = digit_counter['0']
             one_count  = digit_counter['1']
-            for i in range(m, zero_count - 1, -1):
-                for j in range(n, one_count - 1, -1):
-                    dp[i][j] = max(dp[i][j], dp[i - zero_count][j - one_count] + 1)
 
-        return dp[m][n]
+            next_dp = [[0] * (n + 1) for _ in range(m + 1)]
+            for i in range(m + 1):
+                for j in range(n + 1):
+                    if i >= zero_count and j >= one_count:
+                        next_dp[i][j] = max(curr_dp[i][j], curr_dp[i - zero_count][j - one_count] + 1)
+                    else:
+                        next_dp[i][j] = curr_dp[i][j]
+            curr_dp = next_dp
+        return curr_dp[m][n]
