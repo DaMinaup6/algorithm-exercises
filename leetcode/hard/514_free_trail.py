@@ -1,9 +1,10 @@
 # -----------------------------------------
 # My Solution: DFS + Memoization
 #
-# Time  Complexity: O(n^5)
-# Space Complexity: O(n^4)
+# Time  Complexity: O(mn^3)
+# Space Complexity: O(mn^2)
 # -----------------------------------------
+# m := len(key)
 # NOTE: This solution causes TLE
 from collections import defaultdict
 from functools import lru_cache
@@ -36,11 +37,84 @@ class Solution:
         return dfs(0, 0, 0)
 
 # -----------------------------------------
+# My Solution: DFS + Memoization (Enhanced)
+#
+# Time  Complexity: O(mn^2)
+# Space Complexity: O(mn)
+# -----------------------------------------
+# m := len(key)
+from collections import defaultdict
+from functools import lru_cache
+
+class Solution:
+    def findRotateSteps(self, ring: str, key: str) -> int:
+        ring_char_indexes = defaultdict(set)
+        for index, char in enumerate(ring):
+            ring_char_indexes[char].add(index)
+
+        @lru_cache(None)
+        def min_steps_starts_from(ring_index, key_index):
+            if key_index == len(key):
+                return 0
+
+            curr_key_char = key[key_index]
+            if ring_index in ring_char_indexes[curr_key_char]:
+                return 1 + min_steps_starts_from(ring_index, key_index + 1)
+
+            min_steps = float('inf')
+            for char_index in ring_char_indexes[curr_key_char]:
+                move_steps = min(abs(char_index - ring_index), len(ring) - abs(char_index - ring_index))
+                if move_steps + 1 >= min_steps:
+                    continue
+                min_steps = min(min_steps, move_steps + 1 + min_steps_starts_from(char_index, key_index + 1))
+            return min_steps
+
+        return min_steps_starts_from(0, 0)
+
+# -----------------------------------------
+# My Solution: Dynamic Programming
+#
+# Time  Complexity: O(mn^2)
+# Space Complexity: O(mn)
+# -----------------------------------------
+# m := len(key)
+from collections import defaultdict
+
+class Solution:
+    def findRotateSteps(self, ring: str, key: str) -> int:
+        ring_char_indexes = defaultdict(set)
+        for index, char in enumerate(ring):
+            ring_char_indexes[char].add(index)
+
+        min_steps = [[float('inf')] * (len(key) + 1) for _ in range(len(ring))]
+        for ring_index in range(len(ring)):
+            min_steps[ring_index][-1] = 0
+
+        for key_index in range(len(key) - 1, -1, -1):
+            for ring_index in range(len(ring) - 1, -1, -1):
+                curr_key_char = key[key_index]
+                if ring_index in ring_char_indexes[curr_key_char]:
+                    min_steps[ring_index][key_index] = 1 + min_steps[ring_index][key_index + 1]
+                    continue
+
+                curr_min_steps = float('inf')
+                for char_index in ring_char_indexes[curr_key_char]:
+                    smaller_index = min(char_index, ring_index)
+                    greater_index = max(char_index, ring_index)
+                    move_steps = min(greater_index - smaller_index, len(ring) + smaller_index - greater_index)
+                    if move_steps + 1 >= curr_min_steps:
+                        continue
+                    curr_min_steps = min(curr_min_steps, move_steps + 1 + min_steps[char_index][key_index + 1])
+                min_steps[ring_index][key_index] = curr_min_steps
+        return min_steps[0][0]
+
+# -----------------------------------------
 # Model Solution: Dynamic Programming
 #
-# Time  Complexity: O(n^3)
-# Space Complexity: O(n^2)
+# Time  Complexity: O(mn^2)
+# Space Complexity: O(mn)
 # -----------------------------------------
+# m := len(key)
 # Ref: https://www.pythonf.cn/read/161253
 from collections import defaultdict
 
@@ -64,9 +138,10 @@ class Solution:
 # -----------------------------------------
 # Model Solution: Dynamic Programming
 #
-# Time  Complexity: O(n^3)
+# Time  Complexity: O(mn^2)
 # Space Complexity: O(n)
 # -----------------------------------------
+# m := len(key)
 # Ref: http://bookshadow.com/weblog/2017/03/05/leetcode-freedom-trail/
 from collections import defaultdict
 
