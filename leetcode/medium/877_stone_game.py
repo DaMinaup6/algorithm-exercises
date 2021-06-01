@@ -44,6 +44,10 @@ class Solution:
         for sub_piles_length in range(2, len(piles) + 1):
             for start_index in range(0, len(piles) - sub_piles_length + 1):
                 end_index = start_index + sub_piles_length - 1
+                # we need to consider dp[start_index + 1][end_index] and dp[start_index][end_index - 1] previously, yet
+                # end_index - (start_index + 1) + 1 == sub_piles_length - 1 == (end_index - 1) - start_index + 1
+                # so we can say value of dp[start_index][end_index] can be decided by dp[start_index] and dp[start_index + 1]
+                # hence we simplify the 2D dp array to 1D dp array
                 dp[start_index] = max(piles[start_index] - dp[start_index + 1], piles[end_index] - dp[start_index])
 
         return dp[0] > 0
