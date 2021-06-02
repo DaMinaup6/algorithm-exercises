@@ -40,6 +40,11 @@
 # -----------------------------------------
 class Solution:
     def firstMissingPositive(self, nums):
+        # e.g. nums == [7, 3, 1, 9] => our target is to get modified array like [1, x, 3, y] where x and y are 7 or 9, doesn't matter which one is on which position
+        #      when idx == 1, we want to swap 3 with the element nums[2] since 3 needed to be put at index 2, we we get [7, 1, 3, 9]
+        #      and 1 needed to be put at index 0, so that's why we need a while loop here
+        #      need to notice that if nums == [7, 3, 2, 9], after 3 swap with 2, need to break the while loop since 2 is already on its correct position
+        #      if not break the while loop then it won't stop
         for idx in range(0, len(nums)):
             while 0 < nums[idx] <= len(nums) and nums[idx] != nums[nums[idx] - 1]:
                 idx_2 = nums[idx] - 1
