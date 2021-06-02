@@ -81,3 +81,39 @@ class Solution:
                         char_full_num += 1
 
         return s[sub_s_indexes[0]:(sub_s_indexes[1] + 1)]
+
+# -----------------------------------------
+# Model Solution
+#
+# Time  Complexity: O(m + n)
+# Space Complexity: O(m + n)
+# -----------------------------------------
+# m := len(s), n := len(t)
+# Ref: https://blog.csdn.net/XX_123_1_RJ/article/details/86756306
+from collections import Counter
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        t_chars_count = collections.Counter(t)
+        miss_char_num = len(t)
+
+        left_pointer = sub_str_left = sub_str_right = 0
+        for right_pointer, char in enumerate(s):
+            if char in t_chars_count:
+                if t_chars_count[char] > 0:
+                    miss_char_num -= 1
+                t_chars_count[char] -= 1
+
+            # e.g. s == "DAABC", t == "ABC"
+            #      when right_pointer reaches index 4, we have t_chars_count == { "A": -1, "B": 0, "C": 0 }
+            #      since "D" not in t so it can be skipped, obviously
+            #      and t_chars_count["A"] < 0, which means that we have contained more "A" than needed in t, so the first "A" can be skipped, too
+            if miss_char_num == 0:
+                # if s[left_pointer] not in t_chars_count then it means it can be skipped
+                while left_pointer < right_pointer and (s[left_pointer] not in t_chars_count or t_chars_count[s[left_pointer]] < 0):
+                    if s[left_pointer] in t_chars_count:
+                        t_chars_count[s[left_pointer]] += 1
+                    left_pointer += 1
+                if sub_str_right == 0 or (right_pointer + 1) - left_pointer <= sub_str_right - sub_str_left:
+                    sub_str_left, sub_str_right = left_pointer, (right_pointer + 1)
+        return s[sub_str_left:sub_str_right]
