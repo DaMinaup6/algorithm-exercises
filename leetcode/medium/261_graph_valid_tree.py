@@ -25,18 +25,17 @@ class Solution:
             connected[edge[0]].append(edge[1])
 
         visited_nodes = set()
-        def dfs(node):
+        def node_valid(node):
             for neighbor in connected[node]:
                 if neighbor in visited_nodes:
                     return False
                 visited_nodes.add(neighbor)
-                if not dfs(neighbor):
+                if not node_valid(neighbor):
                     return False
-
             return True
 
         visited_nodes.add(edges[0][0])
-        if not dfs(edges[0][0]):
+        if not node_valid(edges[0][0]):
             return False
         return len(visited_nodes) == n
 
