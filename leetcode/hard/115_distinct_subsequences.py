@@ -70,6 +70,11 @@ class Solution:
                     # 2) for subsequences not ends at s[s_index - 1], the number would be dp[t_index][s_index - 1]
                     dp[t_index][s_index] = dp[t_index - 1][s_index - 1] + dp[t_index][s_index - 1]
                 else:
+                    # if t[t_index - 1] != s[s_index - 1] => no subsequences in s ends at s_index - 1 matches t[:t_index]
+                    # so it just equals dp[t_index][s_index - 1]
+                    # i.e. s == "bagbabag", t == "b", we have
+                    #               "   b  a  g  b  a  b  a  g"
+                    #      dp[1] == [0, 1, 1, 1, 2, 2, 3, 3, 3]
                     dp[t_index][s_index] = dp[t_index][s_index - 1]
         return dp[len(t)][len(s)]
 
