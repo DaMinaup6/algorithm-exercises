@@ -53,21 +53,24 @@ class Solution:
 # -----> Version 2: Space Complexity: O(n)
 class Solution:
     def minCut(self, s: str) -> int:
-        if len(s) == 1:
-            return 0
-
         # dp[i] := minimum cuts needed for s[:i]
+        # for string with length i, it needs i - 1 cuts at most
+        # e.g. s == "abcde", then we need 4 cuts to get ["a", "b", "c", "d", "e"]
+        # set dp[0] == -1 for strings are already palindrome
+        # e.g. s == "aba", then with dp[0] == -1 we get dp[-1] = 0
         dp = [cut for cut in range(-1, len(s))]
         for index in range(len(s)):
             # odd length palindrome
-            radius = 0
-            while index - radius >= 0 and index + radius < len(s) and s[index - radius] == s[index + radius]:
-                dp[index + radius + 1] = min(dp[index + radius + 1], dp[index - radius] + 1)
-                radius += 1
+            left_pointer, right_pointer = index, index
+            while left_pointer >= 0 and right_pointer < len(s) and s[left_pointer] == s[right_pointer]:
+                dp[right_pointer + 1] = min(dp[right_pointer + 1], dp[left_pointer] + 1)
+                left_pointer  -= 1
+                right_pointer += 1
             # even length palindrome
-            radius = 0
-            while index - radius >= 0 and index + radius + 1 < len(s) and s[index - radius] == s[index + radius + 1]:
-                dp[index + radius + 2] = min(dp[index + radius + 2], dp[index - radius] + 1)
-                radius += 1
+            left_pointer, right_pointer = index, index + 1
+            while left_pointer >= 0 and right_pointer < len(s) and s[left_pointer] == s[right_pointer]:
+                dp[right_pointer + 1] = min(dp[right_pointer + 1], dp[left_pointer] + 1)
+                left_pointer  -= 1
+                right_pointer += 1
 
         return dp[-1]
