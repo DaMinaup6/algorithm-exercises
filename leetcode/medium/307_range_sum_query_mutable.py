@@ -13,12 +13,16 @@ class NumArray:
         for index in range(len(nums)):
             self.update_tree_val(index, nums[index])
 
+    # -----> Time Complexity: O(1)
+    def lowest_bit(self, num):
+        return num & (-num)
+
     # -----> Time Complexity: O(log(n))
     def update_tree_val(self, index: int, diff: int) -> None:
         index += 1
         while index <= len(self.nums):
             self.binary_indexed_tree[index] += diff
-            index += index & (-index)
+            index += self.lowest_bit(index)
 
     # -----> Time Complexity: O(log(n))
     def get_sum(self, index: int) -> int:
@@ -27,7 +31,7 @@ class NumArray:
         index += 1
         while index > 0:
             range_sum += self.binary_indexed_tree[index]
-            index -= index & (-index)
+            index -= self.lowest_bit(index)
         return range_sum
 
     # -----> Time Complexity: O(log(n))

@@ -4,8 +4,9 @@
 # Space Complexity: O(mn)
 # -----------------------------------------
 # Ref:
-# a) https://www.cnblogs.com/grandyang/p/5300458.html
-# b) https://github.com/GJzh/Leetcode/blob/master/python/308%20Range%20Sum%20Query%202D%20-%20Mutable.py
+# a) https://www.youtube.com/watch?v=WbafSgetDDk
+# b) https://www.cnblogs.com/grandyang/p/5300458.html
+# c) https://github.com/GJzh/Leetcode/blob/master/python/308%20Range%20Sum%20Query%202D%20-%20Mutable.py
 class NumMatrix:
 
     # -----> Time Complexity: O(mn)
@@ -16,6 +17,10 @@ class NumMatrix:
             for col in range(len(matrix[0])):
                 self.update_tree_val(row, col, matrix[row][col])
 
+    # -----> Time Complexity: O(1)
+    def lowest_bit(self, num):
+        return num & (-num)
+
     # -----> Time Complexity: O(log(m) * log(n))
     def update_tree_val(self, row, col, diff):
         row_index = row + 1
@@ -23,8 +28,8 @@ class NumMatrix:
             col_index = col + 1
             while col_index <= len(self.matrix[0]):
                 self.bit_2d[row_index][col_index] += diff
-                col_index += col_index & (-col_index)
-            row_index += row_index & (-row_index)
+                col_index += self.lowest_bit(col_index)
+            row_index += self.lowest_bit(row_index)
 
     # -----> Time Complexity: O(log(m) * log(n))
     def get_sum(self, row, col):
@@ -35,8 +40,8 @@ class NumMatrix:
             col_index = col + 1
             while col_index > 0:
                 region_sum += self.bit_2d[row_index][col_index]
-                col_index -= col_index & (-col_index)
-            row_index -= row_index & (-row_index)
+                col_index -= self.lowest_bit(col_index)
+            row_index -= self.lowest_bit(row_index)
         return region_sum
 
     # -----> Time Complexity: O(log(m) * log(n))
