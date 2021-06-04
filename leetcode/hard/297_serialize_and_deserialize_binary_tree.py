@@ -18,25 +18,29 @@ class Codec:
 
     def serialize(self, root):
         vals = []
-        def preOrder(root):
-            if not root:
+        def pre_order_traversal(root):
+            if root is None:
                 vals.append('None')
             else:
                 vals.append(str(root.val))
-                preOrder(root.left)
-                preOrder(root.right)
-        preOrder(root)
-        return ','.join(vals)
+                pre_order_traversal(root.left)
+                pre_order_traversal(root.right)
+        pre_order_traversal(root)
+        return ",".join(vals)
 
     def deserialize(self, data):
-        vals = deque(val for val in data.split(','))
+        # e.g. root == [1, 2, 3, null, null, 4, 5]
+        #      here vals == deque(['1', '2', 'None', 'None', '3', '4', 'None', 'None', '5', 'None', 'None'])
+        #      the key is that we always append 'None' after node value if it has no left or right child node
+        vals = deque(val for val in data.split(","))
         def build():
-            if vals:
+            if len(vals) > 0:
                 val = vals.popleft()
                 if val == 'None':
                     return None
+
                 root = TreeNode(int(val))
-                root.left = build()
+                root.left  = build()
                 root.right = build()
                 return root
         return build()
