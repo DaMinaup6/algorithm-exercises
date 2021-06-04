@@ -74,17 +74,18 @@ class Solution:
 # -----------------------------------------
 # My Solution: Dynamic Programming
 #
-# Time  Complexity: O(mn^2)
-# Space Complexity: O(mn)
+# Time Complexity: O(mn^2)
 # -----------------------------------------
-# m := len(key)
+# m := len(key), n := len(ring)
+
+# -----> Version 1: Space Complexity: O(mn)
 from collections import defaultdict
 
 class Solution:
     def findRotateSteps(self, ring: str, key: str) -> int:
-        ring_char_indexes = defaultdict(set)
+        ring_char_indexes = defaultdict(list)
         for index, char in enumerate(ring):
-            ring_char_indexes[char].add(index)
+            ring_char_indexes[char].append(index)
 
         min_steps = [[float('inf')] * (len(key) + 1) for _ in range(len(ring))]
         for ring_index in range(len(ring)):
@@ -93,7 +94,7 @@ class Solution:
         for key_index in range(len(key) - 1, -1, -1):
             for ring_index in range(len(ring) - 1, -1, -1):
                 curr_key_char = key[key_index]
-                if ring_index in ring_char_indexes[curr_key_char]:
+                if ring[ring_index] == curr_key_char:
                     min_steps[ring_index][key_index] = 1 + min_steps[ring_index][key_index + 1]
                     continue
 
@@ -107,6 +108,37 @@ class Solution:
                     curr_min_steps = min(curr_min_steps, move_steps + 1 + min_steps[char_index][key_index + 1])
                 min_steps[ring_index][key_index] = curr_min_steps
         return min_steps[0][0]
+
+# -----> Version 2: Space Complexity: O(n)
+from collections import defaultdict
+
+class Solution:
+    def findRotateSteps(self, ring: str, key: str) -> int:
+        ring_char_indexes = defaultdict(list)
+        for index, char in enumerate(ring):
+            ring_char_indexes[char].append(index)
+
+        curr_min_steps = [0] * len(ring)
+
+        for key_index in range(len(key) - 1, -1, -1):
+            next_min_steps = [0] * len(ring)
+            for ring_index in range(len(ring) - 1, -1, -1):
+                curr_key_char = key[key_index]
+                if ring[ring_index] == curr_key_char:
+                    next_min_steps[ring_index] = 1 + curr_min_steps[ring_index]
+                    continue
+
+                min_steps = float('inf')
+                for char_index in ring_char_indexes[curr_key_char]:
+                    smaller_index = min(char_index, ring_index)
+                    greater_index = max(char_index, ring_index)
+                    move_steps = min(greater_index - smaller_index, len(ring) + smaller_index - greater_index)
+                    if move_steps + 1 >= min_steps:
+                        continue
+                    min_steps = min(min_steps, move_steps + 1 + curr_min_steps[char_index])
+                next_min_steps[ring_index] = min_steps
+            curr_min_steps = next_min_steps
+        return curr_min_steps[0]
 
 # -----------------------------------------
 # Model Solution: Dynamic Programming
